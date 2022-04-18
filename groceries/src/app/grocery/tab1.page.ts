@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { GroceryService } from '../grocery-service.service';
 import { InputDialogService } from '../input-dialog.service';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { InputDialogService } from '../input-dialog.service';
 })
 export class Tab1Page {
 
-  constructor(public toastController: ToastController, public dataService: GroceryService, public inputDialogService: InputDialogService) {}
+  constructor(public toastController: ToastController, public dataService: GroceryService, public inputDialogService: InputDialogService, private socialSharing: SocialSharing) {}
 
   title = "Grocery List";
 
@@ -37,6 +38,19 @@ export class Tab1Page {
     console.log("This item is being edited", item, index);
 
     this.inputDialogService.showPrompt(item, index);
+  }
+
+  shareItem(item) {
+    let message = "Grocery Item - Name: " + item.name + " - Quantity: " + item.quantity;
+    let subject = "Shared via Grocery app";
+
+    this.socialSharing.share(message, subject).then(() => {
+      // Sharing via email is possible
+      console.log("Shared successfully!");
+    }).catch((error) => {
+      console.error("Error while sharing ", error);
+    });
+    
   }
 
 
